@@ -1,7 +1,7 @@
 <?php
 
 $pages = Array(
-	'name' => "SportsTicker",
+	'name' => "Election",
 	'type' => "output",
 	'page' => "plugin_setup.php");
 

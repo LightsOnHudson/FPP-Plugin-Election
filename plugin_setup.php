@@ -32,9 +32,14 @@ if(isset($_POST['submit']))
 //	echo "Writring config fie <br/> \n";
 	
 	WriteSettingToFile("VOTES",$VOTES,$pluginName);
-	WriteSettingToFile("ENABLED",urlencode($_POST["ENABLED"]),$pluginName);
+	WriteSettingToFile("STATE",urlencode($_POST["STATE"]),$pluginName);
+
+
 	WriteSettingToFile("SEPARATOR",urlencode($_POST["SEPARATOR"]),$pluginName);
 	WriteSettingToFile("LAST_READ",urlencode($_POST["LAST_READ"]),$pluginName);
+	WriteSettingToFile("YEAR",urlencode($_POST["YEAR"]),$pluginName);
+	WriteSettingToFile("MONTH",urlencode($_POST["MONTH"]),$pluginName);
+	WriteSettingToFile("DAY",urlencode($_POST["DAY"]),$pluginName);
 }
 //print_r($pluginSettings);
 
@@ -43,14 +48,22 @@ if(isset($_POST['submit']))
 	//$VOTES = urldecode(ReadSettingFromFile("VOTES",$pluginName));
 	$VOTES = urldecode($pluginSettings['VOTES']);
 	
-	//$ENABLED = urldecode(ReadSettingFromFile("ENABLED",$pluginName));
-	$ENABLED = urldecode($pluginSettings['ENABLED']);
+
+
 	
 	//$SEPARATOR = urldecode(ReadSettingFromFile("SEPARATOR",$pluginName));
 	$SEPARATOR = urldecode($pluginSettings['SEPARATOR']);
 	
 	//$LAST_READ = urldecode(ReadSettingFromFile("LAST_READ",$pluginName));
 	$LAST_READ = $pluginSettings['LAST_READ'];
+	$STATE = urldecode($pluginSettings['STATE']);
+	$eYEAR = urldecode($pluginSettings['YEAR']);
+	$eMONTH = urldecode($pluginSettings['MONTH']);
+	$eDAY = urldecode($pluginSettings['DAY']);
+	
+	if(trim($STATE) =="") {
+		$STATE="US";
+	}
 	
 	if($SEPARATOR == "") {
 		$SEPARATOR="|";
@@ -79,7 +92,7 @@ if(isset($_POST['submit']))
 <p>Configuration:
 <ul>
 <li>Select the Election data you want to include in the list, shift click to multi select</li>
-<li>Enable the plugin, Restart FPPD</li>
+<li>Enable the plugin</li>
 <li>Configure your separator that will appear between scores.. Default |
 </ul>
 <ul>
@@ -100,12 +113,9 @@ $reboot=0;
 
 echo "ENABLE PLUGIN: ";
 
-if($ENABLED == "1") {
-		echo "<input type=\"checkbox\" checked name=\"ENABLED\"> \n";
-//PrintSettingCheckbox("Radio Station", "ENABLED", $restart = 0, $reboot = 0, "ON", "OFF", $pluginName = $pluginName, $callbackName = "");
-	} else {
-		echo "<input type=\"checkbox\"  name=\"ENABLED\"> \n";
-}
+
+PrintSettingCheckbox("Plugin", "ENABLED", $restart = 0, $reboot = 0, "1", "0", $pluginName = $pluginName, $callbackName = "");
+
 
 echo "<p/> \n";
 
@@ -114,9 +124,27 @@ printVOTESOptions();
 
 
 echo "<p/> \n";
-
+echo "If specific state, enter two character state code here: \n";
+echo "<input type=\"text\" name=\"STATE\" size=\"2\" value=\"".$STATE."\"> \n";
 
 echo "<p/> \n";
+echo "If specific election DATE Check here: \n";
+
+
+	PrintSettingCheckbox("Use Election Date", "EDATE", $restart = 0, $reboot = 0, "1", "0", $pluginName = $pluginName, $callbackName = "");
+
+	echo "<p/> \n";
+	echo "Enter Date \n";
+echo "<p/> \n";
+echo "Year: \n";
+echo "<input type=\"text\" name=\"YEAR\" size=\"4\" value=\"".$eYEAR."\"> \n";
+echo "Month: \n";
+echo "<input type=\"text\" name=\"MONTH\" size=\"2\" value=\"".$eMONTH."\"> \n";
+echo "Day: \n";
+echo "<input type=\"text\" name=\"DAY\" size=\"2\" value=\"".$eDAY."\"> \n";
+
+echo "<p/> \n";
+
 
 echo "Separator: \n";
 

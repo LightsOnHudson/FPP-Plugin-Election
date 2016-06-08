@@ -1,25 +1,25 @@
 <?php
 
-function printSportsOptions()
+function printVotesOptions()
 
 
 {
 
-	global $SPORTS,$SPORTS_DATA_ARRAY;
+	global $VOTES,$VOTES_DATA_ARRAY;
 	 
-	$SPORTS_READ = explode(",",$SPORTS);
+	$VOTES_READ = explode(",",$VOTES);
 
-	echo "<select multiple=\"multiple\" name=\"SPORTS[]\">";
+	echo "<select multiple=\"multiple\" name=\"VOTES[]\">";
 
 
-	for($i=0;$i<=count($SPORTS_DATA_ARRAY)-1;$i++) {
+	for($i=0;$i<=count($VOTES_DATA_ARRAY)-1;$i++) {
 		
-		if(in_array($SPORTS_DATA_ARRAY[$i][0],$SPORTS_READ)) {
+		if(in_array($VOTES_DATA_ARRAY[$i][0],$VOTES_READ)) {
 			
-			echo "<option selected value=\"" . $SPORTS_DATA_ARRAY[$i][0] . "\">" . $SPORTS_DATA_ARRAY[$i][0] . "</option>";
+			echo "<option selected value=\"" . $VOTES_DATA_ARRAY[$i][0] . "\">" . $VOTES_DATA_ARRAY[$i][0] . "</option>";
 		} else {
 
-			echo "<option value=\"" . $SPORTS_DATA_ARRAY[$i][0] . "\">" . $SPORTS_DATA_ARRAY[$i][0] . "</option>";
+			echo "<option value=\"" . $VOTES_DATA_ARRAY[$i][0] . "\">" . $VOTES_DATA_ARRAY[$i][0] . "</option>";
 		}
 
 	}
