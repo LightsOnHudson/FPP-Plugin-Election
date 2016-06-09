@@ -124,8 +124,8 @@ printVOTESOptions();
 
 
 echo "<p/> \n";
-echo "If specific state, enter two character state code here: \n";
-echo "<input type=\"text\" name=\"STATE\" size=\"2\" value=\"".$STATE."\"> \n";
+echo "If specific state, enter two character state code here: For multiple states use , between \n";
+echo "<input type=\"text\" name=\"STATE\" size=\"30\" value=\"".$STATE."\"> \n";
 
 echo "<p/> \n";
 echo "If specific election DATE Check here: \n";
