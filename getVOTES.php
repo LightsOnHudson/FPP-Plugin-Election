@@ -8,7 +8,7 @@ $myPid = getmypid ();
 $messageQueue_Plugin = "MessageQueue";
 $MESSAGE_QUEUE_PLUGIN_ENABLED = false;
 
-$DEBUG = true;
+//$DEBUG = true;
 
 $skipJSsettings = 1;
 require_once ("/opt/fpp/www/config.php");
@@ -54,6 +54,7 @@ if (file_exists ( $messageQueuePluginPath . "functions.inc.php" )) {
 
 // print_r($pluginSettings);
 // echo "\n";
+$DEBUG = urldecode ( $pluginSettings ['DEBUG'] );
 
 // $SPORTS = urldecode(ReadSettingFromFile("SPORTS",$pluginName));
 $VOTES = urldecode ( $pluginSettings ['VOTES'] );
@@ -64,15 +65,15 @@ $ENABLED = urldecode ( $pluginSettings ['ENABLED'] );
 
 // $SEPARATOR = urldecode(ReadSettingFromFile("SEPARATOR",$pluginName));
 $SEPARATOR = urldecode ( $pluginSettings ['SEPARATOR'] );
-
+$USE_SPECIFIC_STATES = urldecode ( $pluginSettings ['USE_SPECIFIC_STATES'] );
 // $LAST_READ = urldecode(ReadSettingFromFile("LAST_READ",$pluginName));
 $LAST_READ = $pluginSettings ['LAST_READ'];
 $eYEAR = urldecode ( $pluginSettings ['YEAR'] );
 $eMONTH = urldecode ( $pluginSettings ['MONTH'] );
 $eDAY = urldecode ( $pluginSettings ['DAY'] );
 
-$eDATE = date ( Ymd );
-$eDATE = "20160607";
+//$eDATE = date ( Ymd );
+//$eDATE = "20160607";
 $eDATE = $eYEAR . $eMONTH . $eDAY;
 
 $USE_EDATE = urldecode ( $pluginSettings ['EDATE'] );
@@ -105,139 +106,176 @@ if ($DEBUG) {
 $messageText = "";
 
 $STATE_INDEX = 0;
+$USE_STATE = 0;
 
 for($i = 0; $i <= count ( $VOTES_READ ) - 1; $i ++) {
 	$VOTE_LOCATOR_INDEX = 0;
-	
-	echo "looking for " . $VOTES_READ [$i] . " in Array \n";
-	
+
 	foreach ( $VOTES_DATA_ARRAY as $VOTE_LOCATORS ) {
-		echo "getting data title " . $VOTE_LOCATORS [0] . "\n";
-		// print_r($VOTE_LOCATORS);
+
 		
 		if ($VOTE_LOCATORS [0] == $VOTES_READ [$i]) {
 			
-			$messageText .= $SEPARATOR . " " . $VOTES_READ [$i] . " " . $SEPARATOR;
+			$messageText .= $SEPARATOR . " " . $VOTES_READ [$i] . " ";// . $SEPARATOR;
 			
-			echo "FOUND: " . $VOTES_READ [$i] . "\n";
-			echo "vot locate index = " . $VOTE_LOCATOR_INDEX . "\n";
+			logEntry(" Found Party: ".$VOTES_READ [$i]. " Index: ".$VOTE_LOCATOR_INDEX);
+	
 			
-			// echo $SPORTS_READ[$i]. " is in Sports data array\n";
+			$VOTE_DATA_URL = $VOTES_DATA_ARRAY[$VOTE_LOCATOR_INDEX][1];
 			
-			$VOTE_DATA_URL = $VOTES_DATA_ARRAY [$VOTE_LOCATOR_INDEX] [1];
-			
-			if ($VOTES_READ [$i] == "STATE") {
-				
-				// need to check for multiple states
-				$STATES_TO_CHECK = explode ( ",", $STATE );
-				if ($DEBUG)
-					print_r ( $STATES_TO_CHECK );
-				
-				if (count ( $STATES_TO_CHECK ) > 1) {
-				
-				// need to append the STATE locator to the URL
-					for($states = 0;$states <= count($STATES_TO_CHECK)-1;$states++) {
-						
-					
-						$VOTE_DATA_URL = $VOTES_DATA_ARRAY [$VOTE_LOCATOR_INDEX] [1];
-						$VOTE_DATA_URL .= $STATES_TO_CHECK [$states] . ".xml";
-						echo "VOTE DATA URL FOR STATE: ".$STATES_TO_CHECK[$states]. " = ".$VOTE_DATA_URL."\n";
-			
-					
-						}
-				} else {
-					$VOTE_DATA_URL = $VOTES_DATA_ARRAY [$VOTE_LOCATOR_INDEX] [1];
-			
-				// fetch the information
-				
-				// $votesData = file_get_contents($VOTE_DATA_URL);
-				// $simple = "<para><note>simple note</note></para>";
-				
-				
-				}
-				
-			}
-			
-			if ($DEBUG) {
-				echo "getting votes data from: " . $VOTE_DATA_URL . "\n";
-			}
-			$myVotes = simplexml_load_file ( $VOTE_DATA_URL );
-			// $p = xml_parser_create();
-			// xml_parse_into_struct($p, $votesData, $vals, $index);
-			// xml_parser_free($p);
-			
-			if ($DEBUG) {
-				// echo "Index array\n";
-				// print_r($index);
-				// echo "\nVals array\n";
-				// print_r($vals);
-				// print_r($votesData);
-				 print_r($myVotes);
-			}
-			
-			$VOTE_RACE_COUNT = count ( $myVotes->race );
-			
-			echo "Race count: " . $VOTE_RACE_COUNT . "\n";
-			
-			for($r = 0; $r <= $VOTE_RACE_COUNT - 1; $r ++) {
-				
-				// echo "Race : ". ($r+1)."\n";
-				// echo "eDATE : ".$eDATE."\n";
-				// echo "Race date: ".$myVotes->race[$r]['eDate']."\n";
-				
-				// foreach($myVotes->race[$r]->attributes() as $a => $b) {
-				// echo $a,'="',$b,"\"\n";
-				// }
-				// echo "STATE: ".$myVotes->race[$r]['state']."\n";
-				
-				if ($USE_EDATE == "1" || $USE_EDATE == "on") {
-					echo "Searching for races with date : " . $eDATE . "\n";
-					if ($eDATE == $myVotes->race [$r] ['eDate']) {
-						$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race [$r] ['state'] . " " . $SEPARATOR;
+					if ($USE_SPECIFIC_STATES == "1" || $USE_SPECIFIC_STATES == "on") {
+						// need to check for multiple states
+						$STATES_TO_CHECK = explode ( ",", $STATE );
 					}
-					
-					$CANDIDATE_COUNT = count ( $myVotes->race [$r]->cand );
-					// echo "There are ".$CANDIDATE_COUNT." in race: ".$r."\n";
-					
-					for($c = 0; $c <= $CANDIDATE_COUNT - 1; $c ++) {
-						
-						echo "CANDIDATE : " . ($c + 1) . "\n<br/> \n";
-						$CANDIDATE_NAME = $myVotes->race [$r]->cand [$c] ['name'];
-						$CANDIDATE_VOTES = $myVotes->race [$r]->cand [$c] ['votes'];
-						$CANDIDATE_VOTES = ( string ) $CANDIDATE_VOTES;
-						$CANDIDATE_VOTES = number_format ( $CANDIDATE_VOTES );
-						
-						echo "NAME: " . $CANDIDATE_NAME . "\n";
-						echo "VOTE: " . $CANDIDATE_VOTES . "\n";
-						echo "-----\n";
-						
-						if ($USE_EDATE == "1" || $USE_EDATE == "on") {
-							echo "Searching for races with date : " . $eDATE . "\n";
-							if ($eDATE == $myVotes->race [$r] ['eDate']) {
-								
-								$messageText .= " " . $CANDIDATE_NAME . ": " . $CANDIDATE_VOTES . " " . $SEPARATOR;
-								
-								// continue;
-							}
-						} else {
-							$messageText .= " " . $CANDIDATE_NAME . ": " . $CANDIDATE_VOTES . " " . $SEPARATOR;
-						}
-						// foreach($myVotes->race[$r]->cand[$c]->attributes() as $e => $f) {
-						// echo $e,'="',$f,"\"\n";
-						// }
-					}
-				} else {
-					
-				}
-			}
+
+							logEntry("URL for data: ".$VOTE_DATA_URL);
+							$messageText .= getVotes($VOTE_DATA_URL);
+						//	logEntry("Message text: ".$messageText);
+							addNewMessage ( $messageText, $pluginName, $pluginData = $VOTES_READ [$i] );
+							$messageText = "";
+							$messageLine = "";
 		}
-		$VOTE_LOCATOR_INDEX ++;
+		
+		$VOTE_LOCATOR_INDEX++;
 	}
 	
-	addNewMessage ( $messageText, $pluginName, $pluginData = $VOTES_READ [$i] );
-	$messageText = "";
-	$messageLine = "";
+
+	//addNewMessage ( $messageText, $pluginName, $pluginData = $VOTES_READ [$i] );
+	//$messageText = "";
+	//$messageLine = "";
+	
 }
+	lockHelper::unlock ();
+	exit ( 0 );
+
+function getVotes($VOTE_DATA_URL) {
+	
+	global $USE_SPECIFIC_STATES, $DEBUG, $VOTE_LOCATOR_INDEX, $USE_EDATE, $eDATE, $STATES_TO_CHECK, $STATE, $SEPARATOR;
+	if ($DEBUG) {
+		echo "getting votes data from: " . $VOTE_DATA_URL . "\n";
+	}
+	$myVotes = simplexml_load_file ( $VOTE_DATA_URL );
+	// $p = xml_parser_create();
+	// xml_parse_into_struct($p, $votesData, $vals, $index);
+	// xml_parser_free($p);
+		
+	if ($DEBUG) {
+		// echo "Index array\n";
+		// print_r($index);
+		// echo "\nVals array\n";
+		// print_r($vals);
+		// print_r($votesData);
+		// print_r($myVotes);
+		
+		//echo "STATE to look for: ".$STATE."\n";
+		
+	}
+		
+	$VOTE_RACE_COUNT = count ( $myVotes->race );
+		
+	logEntry("Race count: ".$VOTE_RACE_COUNT);
+		
+	if ($USE_EDATE == "1" || $USE_EDATE == "on") {
+		logEntry( "Searching for races with date : " . $eDATE);
+	}
+	if ($STATE == "ALL" || $STATE == "US" || $STATE == "") {
+		logEntry("Adding all state data by request: States = US or States = ALL");
+				
+	}
+	if($USE_SPECIFIC_STATES) {
+		logEntry("Looking for specific states: ".$STATE);
+	}
+	
+	for($r = 0; $r <= $VOTE_RACE_COUNT - 1; $r ++) {
+	
+		// echo "Race : ". ($r+1)."\n";
+		logEntry("eDATE: ".$myVotes->race[$r]['eDate']);//."\n";
+		// echo "Race date: ".$myVotes->race[$r]['eDate']."\n";
+
+		if($myVotes->race[$r]['state'] != "") {
+			logEntry( "Looking at data for STATE: ".$myVotes->race[$r]['state']);
+		}
+	
+	
+			if($USE_SPECIFIC_STATES == "1" || $USE_SPECIFIC_STATES == "on") {
+				
+				if(in_array($myVotes->race[$r]['state'],$STATES_TO_CHECK)) {
+					
+						logEntry("state found in states to check array: ".$myVotes->race[$r]['state']);
+						if ($USE_EDATE == "1" || $USE_EDATE == "on") {
+							//	echo "DATE MATCH : " . $eDATE . "\n";
+							if ($eDATE == $myVotes->race[$r]['eDate']) {
+					
+								$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race[$r]['state'] . " " . $SEPARATOR;
+							}
+						} else {
+							$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race[$r]['state'] . " " . $SEPARATOR;
+						}
+						//logEntry("Message Text: ".$messageText);
+						
+						//continue;
+				} else {
+					logEntry("Skpping state: ".$myVotes->race[$r]['state']);
+					continue;
+				}
+				
+			} else {
+				if ($USE_EDATE == "1" || $USE_EDATE == "on") {
+					//	echo "DATE MATCH : " . $eDATE . "\n";
+					if ($eDATE == $myVotes->race[$r]['eDate']) {
+						$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race[$r]['state'] . " " . $SEPARATOR;
+					}
+				} else {
+					$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race[$r]['state'] . " " . $SEPARATOR;
+				}
+					//logEntry("Message text for state: ".$myVotes->race[$r]['state'].": ".$messageText);
+				}
+			
+			
+		
+		//	}
+			
+		$CANDIDATE_COUNT = count ( $myVotes->race [$r]->cand );
+		// echo "There are ".$CANDIDATE_COUNT." in race: ".$r."\n";
+			$CandidateVotes = "";
+		for($c = 0; $c <= $CANDIDATE_COUNT - 1; $c ++) {
+	
+		//	echo "CANDIDATE : " . ($c + 1) . "\n<br/> \n";
+			$CANDIDATE_NAME = $myVotes->race [$r]->cand [$c] ['name'];
+			$CANDIDATE_VOTES = $myVotes->race [$r]->cand [$c] ['votes'];
+			$CANDIDATE_VOTES = ( string ) $CANDIDATE_VOTES;
+			$CANDIDATE_VOTES = number_format ( $CANDIDATE_VOTES );
+	
+			//echo "NAME: " . $CANDIDATE_NAME . "\n";
+			//echo "VOTE: " . $CANDIDATE_VOTES . "\n";
+			//echo "-----\n";
+	
+			if ($USE_EDATE == "1" || $USE_EDATE == "on") {
+			//	echo "DATE MATCH : " . $eDATE . "\n";
+				if ($eDATE == $myVotes->race[$r]['eDate']) {
+	
+					$messageText .= " " . $CANDIDATE_NAME . ": " . $CANDIDATE_VOTES . " " . $SEPARATOR;
+	
+					// continue;
+				}
+			} else {
+				$messageText .= " " . $CANDIDATE_NAME . ": " . $CANDIDATE_VOTES . " " . $SEPARATOR;
+			}
+			
+		}
+		
+	}
+	
+	$VOTE_LOCATOR_INDEX ++;
+	
+	if($DEBUG) {
+	//	echo "Message text: ".$messageText."\n";
+	}
+	
+	return $messageText;
+}
+
+
 function search_in_array($value, $arr) {
 	$num = 0;
 	for($i = 0; $i < count ( $arr );) {

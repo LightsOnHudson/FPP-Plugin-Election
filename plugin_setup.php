@@ -124,6 +124,9 @@ printVOTESOptions();
 
 
 echo "<p/> \n";
+echo "Use Specific State(s): \n";
+PrintSettingCheckbox("Use Specific State(s)", "USE_SPECIFIC_STATES", $restart = 0, $reboot = 0, "1", "0", $pluginName = $pluginName, $callbackName = "");
+echo "<p/> \n";
 echo "If specific state, enter two character state code here: For multiple states use , between \n";
 echo "<input type=\"text\" name=\"STATE\" size=\"30\" value=\"".$STATE."\"> \n";
 
