@@ -9,6 +9,7 @@ include_once "commonFunctions.inc.php";
 include_once "electionData.inc.php";
 
 $pluginName = "Election";
+$pluginVersion ="1.0";
 
 $pluginUpdateFile = $settings['pluginDirectory']."/".$pluginName."/"."pluginUpdate.inc";
 
@@ -82,7 +83,7 @@ if(isset($_POST['submit']))
 
 <div id="<?echo $pluginName;?>" class="settings">
 <fieldset>
-<legend><?php echo $pluginName;?> Support Instructions</legend>
+<legend><?php echo $pluginName." Version: ".$pluginVersion;?> Support Instructions</legend>
 
 <p>Known Issues:
 <ul>
