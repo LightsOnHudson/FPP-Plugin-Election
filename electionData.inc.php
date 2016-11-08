@@ -10,7 +10,8 @@ $VOTES_DATA_ARRAY = array(
 					array("BATTLEGROUND","http://www.cbsnews.com/election-results-data/2016-General/xmlData/Battleground.xml"),
 					array("SENATE","http://www.cbsnews.com/election-results-data/2016-General/xmlData/Races_Sen.xml"),
 					array("HOUSE","http://www.cbsnews.com/election-results-data/2016-General/xmlData/Races_House.xml"),
-					array("GOVERNOR","http://www.cbsnews.com/election-results-data/2016-General/xmlData/Races_Gov.xml")
+					array("GOVERNOR","http://www.cbsnews.com/election-results-data/2016-General/xmlData/Races_Gov.xml"),
+					array("STATE","http://www.cbsnews.com/election-results-data/2016-General/xmlData/Racewide_")
 					);
 
 
