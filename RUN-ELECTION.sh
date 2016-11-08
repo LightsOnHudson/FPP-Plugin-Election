@@ -1,6 +1,5 @@
 #!/bin/sh
-
-#Script to run randomizer
-#Created by MatrixMessage
+#RUn get votes from plugin configuration
 #
-/usr/bin/php /home/fpp/media/plugins/MatrixMessage/matrix.php
+#
+/usr/bin/php /home/fpp/media/plugins/Election/getVOTES.php
