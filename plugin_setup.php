@@ -9,7 +9,7 @@ include_once "commonFunctions.inc.php";
 include_once "electionData.inc.php";
 
 $pluginName = "Election";
-$pluginVersion ="1.0";
+$pluginVersion ="1.1";
 
 $pluginUpdateFile = $settings['pluginDirectory']."/".$pluginName."/"."pluginUpdate.inc";
 
