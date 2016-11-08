@@ -119,6 +119,7 @@ for($i = 0; $i <= count ( $VOTES_READ ) - 1; $i ++) {
 			$messageText .= $SEPARATOR . " " . $VOTES_READ [$i] . " ";// . $SEPARATOR;
 			
 			logEntry(" Found Party: ".$VOTES_READ [$i]. " Index: ".$VOTE_LOCATOR_INDEX);
+			
 	
 			
 			$VOTE_DATA_URL = $VOTES_DATA_ARRAY[$VOTE_LOCATOR_INDEX][1];
@@ -128,6 +129,10 @@ for($i = 0; $i <= count ( $VOTES_READ ) - 1; $i ++) {
 						$STATES_TO_CHECK = explode ( ",", $STATE );
 					}
 
+					if($VOTES_READ[$i] == "STATE") {
+						//get just state overall all race information
+						$VOTE_DATA_URL.=$STATE.".xml";
+					}
 							logEntry("URL for data: ".$VOTE_DATA_URL);
 							$messageText .= getVotes($VOTE_DATA_URL);
 						//	logEntry("Message text: ".$messageText);
