@@ -127,10 +127,13 @@ for($i = 0; $i <= count ( $VOTES_READ ) - 1; $i ++) {
 					if ($USE_SPECIFIC_STATES == "1" || $USE_SPECIFIC_STATES == "on") {
 						// need to check for multiple states
 						$STATES_TO_CHECK = explode ( ",", $STATE );
+						
 					}
 
 					if($VOTES_READ[$i] == "STATE") {
 						//get just state overall all race information
+						//prefix the state letter in the header, otherwise it just says STATE:
+						$messageText .= $STATE." ";
 						$VOTE_DATA_URL.=$STATE.".xml";
 					}
 							logEntry("URL for data: ".$VOTE_DATA_URL);
