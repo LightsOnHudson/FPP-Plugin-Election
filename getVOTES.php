@@ -139,6 +139,8 @@ for($i = 0; $i <= count ( $VOTES_READ ) - 1; $i ++) {
 							logEntry("URL for data: ".$VOTE_DATA_URL);
 							$messageText .= getVotes($VOTE_DATA_URL);
 						//	logEntry("Message text: ".$messageText);
+						//remove quotes from stuff
+						$messageText = str_replace(array('"', "'"), '', $messageText);
 							addNewMessage ( $messageText, $pluginName, $pluginData = $VOTES_READ [$i] );
 							$messageText = "";
 							$messageLine = "";
