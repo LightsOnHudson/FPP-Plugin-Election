@@ -189,6 +189,7 @@ function getVotes($VOTE_DATA_URL) {
 	}
 	if($USE_SPECIFIC_STATES) {
 		logEntry("Looking for specific states: ".$STATE);
+		//add the OFFICE to the message data. 
 	}
 	
 	for($r = 0; $r <= $VOTE_RACE_COUNT - 1; $r ++) {
@@ -211,10 +212,13 @@ function getVotes($VOTE_DATA_URL) {
 							//	echo "DATE MATCH : " . $eDATE . "\n";
 							if ($eDATE == $myVotes->race[$r]['eDate']) {
 					
-								$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race[$r]['state'] . " " . $SEPARATOR;
+								//if using a specific state, then replace with different office data
+								$messageText .= " " . $SEPARATOR . $myVotes->race[$r]['office'] . " " . $SEPARATOR;
+								//$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race[$r]['state'] . " " . $SEPARATOR;
 							}
 						} else {
-							$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race[$r]['state'] . " " . $SEPARATOR;
+							$messageText .= " " . $SEPARATOR .  $myVotes->race[$r]['office'] . " " . $SEPARATOR;
+							//$messageText .= " " . $SEPARATOR . " STATE: " . $myVotes->race[$r]['state'] . " " . $SEPARATOR;
 						}
 						//logEntry("Message Text: ".$messageText);
 						
