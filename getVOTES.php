@@ -260,7 +260,7 @@ function getVotes($VOTE_DATA_URL) {
 			$CANDIDATE_NAME = $myVotes->race [$r]->cand [$c] ['name'];
 			$CANDIDATE_VOTES = $myVotes->race [$r]->cand [$c] ['votes'];
 			$CANDIDATE_VOTES = ( string ) $CANDIDATE_VOTES;
-			$CANDIDATE_VOTES = number_format ( $CANDIDATE_VOTES );
+			//$CANDIDATE_VOTES = number_format ( $CANDIDATE_VOTES );
 	
 			//echo "NAME: " . $CANDIDATE_NAME . "\n";
 			//echo "VOTE: " . $CANDIDATE_VOTES . "\n";
