@@ -141,6 +141,8 @@ for($i = 0; $i <= count ( $VOTES_READ ) - 1; $i ++) {
 						//	logEntry("Message text: ".$messageText);
 						//remove quotes from stuff
 						$messageText = str_replace(array('"', "'"), '', $messageText);
+						//remove any : in the stuff
+						$messageText = str_replace(":", ' ', $messageText);
 							addNewMessage ( $messageText, $pluginName, $pluginData = $VOTES_READ [$i] );
 							$messageText = "";
 							$messageLine = "";
